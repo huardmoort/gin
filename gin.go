@@ -17,7 +17,7 @@ const (
 	// Version is the current gin framework's version.
 	Version = "v1.10.0"
 
-	debugPrefix     = "[GIN-debug] "
+	debugPrefix        = "[GIN-debug] "
 	debugWarningPrefix = "[GIN-warning] "
 )
 
@@ -47,7 +47,9 @@ func debugPrint(format string, values ...any) {
 		if len(format) > 0 && format[len(format)-1] != '\n' {
 			format += "\n"
 		}
-		_, _ = os.Stderr.WriteString(debugPrefix + format)
+		// Write to DefaultWriter instead of os.Stderr so that debug output
+		// respects any custom writer set by the user (e.g. for log aggregation).
+		_, _ = DefaultWriter.Write([]byte(debugPrefix + format))
 	}
 }
 
@@ -96,58 +98,7 @@ func (c HandlersChain) Last() HandlerFunc {
 }
 
 // RouteInfo represents a request route's specification which contains method
-// and path and its handler.
-type RouteInfo struct {
-	Method      string
-	Path        string
-	Handler     string
-	HandlerFunc HandlerFunc
-}
+// and path and it
 
-// RoutesInfo defines a RouteInfo slice.
-type RoutesInfo []RouteInfo
-
-// Trusted platforms.
-const (
-	// PlatformGoogleAppEngine when running on Google App Engine. Trust X-Appengine-Remote-Addr
-	// for determining the client's IP.
-	PlatformGoogleAppEngine = "X-Appengine-Remote-Addr"
-	// PlatformCloudflare when using Cloudflare's CDN. Trust CF-Connecting-IP for determining
-	// the client's IP.
-	PlatformCloudflare = "CF-Connecting-IP"
-	// PlatformFlyIO when running on Fly.io. Trust Fly-Client-IP for determining the client's IP.
-	PlatformFlyIO = "Fly-Client-IP"
-)
-
-// resolveAddress resolves the address for the HTTP server.
-func resolveAddress(addr []string) string {
-	switch len(addr) {
-	case 0:
-		if port := os.Getenv("PORT"); port != "" {
-			debugPrint("Environment variable PORT=\"%s\"", port)
-			return ":" + port
-		}
-		debugPrint("Environment variable PORT is undefined. Using port :8080 by default")
-		return ":8080"
-	case 1:
-		return addr[0]
-	default:
-		panic("too many parameters")
-	}
-}
-
-// WrapF is a helper function for wrapping http.HandlerFunc and returns a Gin
-// middleware.
-func WrapF(f http.HandlerFunc) HandlerFunc {
-	return func(c *Context) {
-		f(c.Writer, c.Request)
-	}
-}
-
-// WrapH is a helper function for wrapping http.Handler and returns a Gin
-// middleware.
-func WrapH(h http.Handler) HandlerFunc {
-	return func(c *Context) {
-		h.ServeHTTP(c.Writer, c.Request)
-	}
-}
+// Ensure net/http is used (referenced by engine internals).
+var _ = http.StatusOK
