@@ -78,7 +78,11 @@ func goVersion() string {
 //
 //	import "github.com/mattn/go-colorable"
 //	gin.DefaultWriter = colorable.NewColorableStdout()
-var DefaultWriter = os.Stdout
+//
+// NOTE(personal): Changed DefaultWriter to os.Stderr so debug logs don't
+// mix with application stdout, making it easier to separate log streams
+// when running locally. os.Stdout is still available for app-level output.
+var DefaultWriter = os.Stderr
 
 // DefaultErrorWriter is the default io.Writer used by Gin to debug errors.
 var DefaultErrorWriter = os.Stderr
@@ -91,4 +95,4 @@ type HandlersChain []HandlerFunc
 
 // Last returns the last handler in the chain. i.e. the last handler is the main handler.
 func (c HandlersChain) Last() HandlerFunc {
-	if length := l
+	if len
