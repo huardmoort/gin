@@ -49,7 +49,7 @@ func debugPrint(format string, values ...any) {
 		}
 		// Write to DefaultWriter instead of os.Stderr so that debug output
 		// respects any custom writer set by the user (e.g. for log aggregation).
-		_, _ = DefaultWriter.Write([]byte(debugPrefix + format))
+		_, _ = fmt.Fprintf(DefaultWriter, debugPrefix+format, values...)
 	}
 }
 
@@ -91,14 +91,4 @@ type HandlersChain []HandlerFunc
 
 // Last returns the last handler in the chain. i.e. the last handler is the main handler.
 func (c HandlersChain) Last() HandlerFunc {
-	if length := len(c); length > 0 {
-		return c[length-1]
-	}
-	return nil
-}
-
-// RouteInfo represents a request route's specification which contains method
-// and path and it
-
-// Ensure net/http is used (referenced by engine internals).
-var _ = http.StatusOK
+	if length := l
