@@ -87,12 +87,10 @@ var DefaultWriter = os.Stderr
 // DefaultErrorWriter is the default io.Writer used by Gin to debug errors.
 var DefaultErrorWriter = os.Stderr
 
+// NOTE(personal): net/http is imported here to satisfy the HandlerFunc and
+// related type dependencies further in the file. Keeping this note as a
+// reminder when tracing import usage during refactors.
+var _ = http.StatusOK // ensure net/http is used
+
 // HandlerFunc defines the handler used by gin middleware as return value.
-type HandlerFunc func(*Context)
-
-// HandlersChain defines a HandlerFunc slice.
-type HandlersChain []HandlerFunc
-
-// Last returns the last handler in the chain. i.e. the last handler is the main handler.
-func (c HandlersChain) Last() HandlerFunc {
-	if len
+type HandlerFunc func(*Conte
