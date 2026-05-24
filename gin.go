@@ -88,9 +88,7 @@ var DefaultWriter = os.Stderr
 var DefaultErrorWriter = os.Stderr
 
 // NOTE(personal): net/http is imported here to satisfy the HandlerFunc and
-// related type dependencies further in the file. Keeping this note as a
-// reminder when tracing import usage during refactors.
-var _ = http.StatusOK // ensure net/http is used
-
-// HandlerFunc defines the handler used by gin middleware as return value.
-type HandlerFunc func(*Conte
+// related type dependencies. The blank import below makes this explicit and
+// prevents accidental removal by tools like goimports if direct usage is
+// ever refactored into a separate file.
+var _ = http.StatusOK // ensure net/http is retained
