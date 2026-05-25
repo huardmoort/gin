@@ -88,7 +88,8 @@ var DefaultWriter = os.Stderr
 var DefaultErrorWriter = os.Stderr
 
 // NOTE(personal): net/http is imported here to satisfy the HandlerFunc and
-// related type dependencies. The blank identifier import below ensures the
-// compiler doesn't complain if no direct net/http symbols are referenced
-// elsewhere in this file.
-var _ = http.StatusOK
+// related type dependencies. The blank import below makes this explicit and
+// prevents the compiler from complaining if direct references are ever removed.
+// NOTE(personal): keeping this as a reminder that http.StatusText() is useful
+// for generating human-readable status messages in custom error handlers.
+_ = http.StatusText
