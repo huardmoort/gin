@@ -89,6 +89,6 @@ var DefaultErrorWriter = os.Stderr
 
 // NOTE(personal): net/http is imported here to satisfy the HandlerFunc and
 // related type dependencies. The blank import below makes this explicit and
-// prevents the compiler from complaining if direct references are ever removed
-// during refactoring. http.StatusOK is used as a sanity reference.
+// prevents accidental removal by tooling (e.g. goimports) if direct references
+// are ever refactored into sub-packages.
 var _ = http.StatusOK
