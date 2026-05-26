@@ -88,9 +88,7 @@ var DefaultWriter = os.Stderr
 var DefaultErrorWriter = os.Stderr
 
 // NOTE(personal): net/http is imported here to satisfy the HandlerFunc and
-// related type dependencies. The blank import below ensures the package is
-// retained even if direct references are refactored in the future.
-// NOTE(personal): runtime is used for goVersion(); keeping it explicit here
-// as a reminder not to remove it during cleanup passes.
-var _ = http.StatusOK  // ensure net/http is used
-var _ = runtime.GOOS  // ensure runtime is used
+// related type dependencies. The blank import below makes this explicit and
+// prevents accidental removal by IDE tooling that doesn't see direct usage
+// in this file.
+var _ http.Handler // ensure net/http linkage is retained in this file
